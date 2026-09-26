@@ -1,0 +1,38 @@
+@startuml
+left to right direction
+
+actor "официант" as Reader
+actor "повар" as Powar
+actor "управляющий" as Admin
+
+rectangle "hotcoffe-now" {
+
+    usecase "разместить заказ" as UC_Register_zakaz
+
+    usecase "выбрать позицию из меню" as UC_chose_pos
+    usecase "стоимость в позиции меню" as UC_price_pos
+    usecase "проверить готовые заказы" as UC_check_state_pos
+
+ 
+
+    usecase "поиск новых заказов" as UC_check_new_pos
+    usecase "загрузка позиции из меню" as UC_load_pos
+    usecase "измение статуса заказа" as UC_change_state_pos
+
+    usecase "добавлять персонал или убирать персонал" as UC_admin_rights
+
+}
+
+Reader -- UC_Register_zakaz
+Reader -- UC_check_state_pos
+UC_Register_zakaz ..> UC_chose_pos : <<include>>
+UC_price_pos ..> UC_chose_pos : <<extend>>
+
+Powar -- UC_check_new_pos
+UC_check_new_pos -- UC_change_state_pos
+UC_check_new_pos ..> UC_load_pos : <<include>>
+
+Admin -- UC_admin_rights
+
+
+@enduml
