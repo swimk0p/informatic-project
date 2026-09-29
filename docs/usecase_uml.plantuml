@@ -13,7 +13,9 @@ rectangle "hotcoffe-now" {
     usecase "стоимость в позиции меню" as UC_price_pos
     usecase "проверить готовые заказы" as UC_check_state_pos
 
- 
+    usecase "войти в систему как 'официант'" as UC_in_Reader
+    usecase "войти в систему как 'повар'" as UC_in_Powar
+    usecase "войти в систему как 'управляющий'" as UC_in_Admin
 
     usecase "поиск новых заказов" as UC_check_new_pos
     usecase "загрузка позиции из меню" as UC_load_pos
@@ -23,16 +25,21 @@ rectangle "hotcoffe-now" {
 
 }
 
-Reader -- UC_Register_zakaz
-Reader -- UC_check_state_pos
+
+Reader -- UC_in_Reader
+
+UC_in_Reader -- UC_Register_zakaz
+UC_in_Reader -- UC_check_state_pos
+
 UC_Register_zakaz ..> UC_chose_pos : <<include>>
 UC_price_pos ..> UC_chose_pos : <<extend>>
 
-Powar -- UC_check_new_pos
+Powar -- UC_in_Powar
+UC_in_Powar--UC_check_new_pos
 UC_check_new_pos -- UC_change_state_pos
 UC_check_new_pos ..> UC_load_pos : <<include>>
 
-Admin -- UC_admin_rights
-
+Admin -- UC_in_Admin
+UC_in_Admin -- UC_admin_rights
 
 @enduml
