@@ -1,0 +1,38 @@
+Table USER {
+  user_id integer [primary key]
+  username string
+  password_hash integer
+  user_role integer
+}
+
+Table USER_ROLE {
+  user_role integer [primary key]
+  name string
+}
+
+Table order {
+  order_id integer [primary key]
+  name string
+  price double
+}
+
+Table menu {
+  menu_id integer [primary key]
+  user_id integer
+  order_id integer
+  order_status integer
+}
+
+Table order_status {
+  status_id integer [primary key]
+  name string
+}
+
+Ref: "USER"."user_role" ?> "USER_ROLE"."user_role"
+
+
+Ref: "USER"."user_id" >? "menu"."user_id"
+
+Ref: "order"."order_id" <? "menu"."menu_id"
+
+Ref: "menu"."order_status" >? "order_status"."status_id"
