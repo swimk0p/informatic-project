@@ -1,151 +1,70 @@
-#include <iostream>
-#include <memory>
-#include <string>
-#include <vector>
-#include <stdlib.h>
+#include "cafe_app.hpp"
 
-class User{
-    int USER_id;
-    std::string username;
-    std::string password;
-    int user_role;
+// Главное меню приложения
+int main() {
+    //setlocale(LC_ALL, "Russian");
+    std::locale::global(std::locale(""));
+    std::cout.imbue(std::locale());
+    CafeApp app("cafe.db"); 
 
-    //контроль над базой данных
-    public:
-		int create_BTS(User *user_n){//BTS - behind the scene
+    while (true) {
+        if (!app.isLoggedIn()) {
+            std::cout << "\n=== Добро пожаловать в hotcoffe-now ===\n";
+            std::cout << "1. Войти в систему\n";
+            std::cout << "2. Зарегистрироваться\n";
+            std::cout << "3. Выйти из программы\n";
+            std::cout << "Выберите действие: ";
+            int action; std::cin >> action;
 
-			user_n[0].USER_id=1;
-			user_n[0].username="ADMIN";
-			user_n[0].password="15378900";
-			user_n[0].user_role=1;
-
-		}
-        int create(User *p,int n){
-	        std::cout<<"Enter Name: ";
-	        std::cin >> p[n].username;
-
-            std::cout<<"Enter Password: ";
-	        std::cin >> p[n].password;
-	        p[n].USER_id=1+n+1;
-            p[n].user_role=0;
-            
-        	std::cout<<"\nRECORD INSERTED...\n";
-	        n++;
-	    return n;
-	    };
-
-        void Search(User *p,std::string us_name,int n){
-	        int i=0;
-	        for( i=0;i<n;i++){
-	            if(p[i].username==us_name){
-		            std::cout<<"USER_id\tusername\tpassword\tuser_role\n";
-	    	        std::cout<<USER_id<<"\t"<<username<<"\t"<<password<<"\t"<<user_role<<"\n";
-		            break;
-    		        }
-	        }
-	        if(p[i].username!=us_name){
-	            std::cout<<"\nRECORD NOT FOUND.\n";
-	            }
-        }
-
-        int Del(User *p,int n,std::string us_name){
-		int j=0,k,flag=0;
-		for(j=0;j<n;j++)
-		{
-			if(p[j].username==us_name){
-                flag=1;
+            if (action == 1) {
+                std::string user, pass;
+                std::cout << "Имя пользователя: "; std::cin >> user;
+                std::cout << "Пароль: "; std::cin >> pass;
+                if (app.loginUser(user, pass)) {
+                    std::cout << "Успешный вход!\n";
+                } else {
+                    std::cout << "Неверное имя пользователя или пароль.\n";
+                }
+            } else if (action == 2) {
+                app.registerUser();
+            } else if (action == 3) {
                 break;
             }
-		}
-        if(flag==1){
-            for(k=j;k<n;k++){
-            p[k]=p[k+1];
+        } else {
+            std::cout << "\n=== Главное Меню Системы ===\n";
+            int role = app.getCurrentRole();
+
+            if (role == 1) { // ОФИЦИАНТ
+                std::cout << "1. Разместить заказ (выбрать из меню)\n";
+                std::cout << "2. Проверить готовые заказы\n";
+                std::cout << "3. Выйти из аккаунта\n";
+                std::cout << "Действие: ";
+                int act; std::cin >> act;
+                if (act == 1) app.placeOrder();
+                    else if (act == 2) app.checkReadyOrders();
+                    else if (act == 3) app.logout();
+                }
+                else if (role == 2) { // ПОВАР
+                    std::cout << "1. Поиск новых заказов / Просмотр кухни\n";
+                    std::cout << "2. Изменить статус заказа\n";
+                    std::cout << "3. Выйти из аккаунта\n";
+                    std::cout << "Действие: ";
+                    int act; std::cin >> act;
+                if (act == 1) app.checkNewOrders();
+                else if (act == 2) app.changeOrderStatus();
+                else if (act == 3) app.logout();
+                }
+                else if (role == 3) { // УПРАВЛЯЮЩИЙ
+                    std::cout << "1. Управление персоналом (Добавить/Убрать)\n";
+                    std::cout << "2. Зарегистрировать нового сотрудника\n";
+                    std::cout << "3. Выйти из аккаунта\n";
+                    std::cout << "Действие: ";
+                    int act; std::cin >> act;
+                    if (act == 1) app.managePersonnel();
+                    else if (act == 2) app.registerUser();
+                    else if (act == 3) app.logout();
+                }
             }
-            std::cout<<"\nRECORD DELETED.\n";
-            return n-1;
-        }else{
-				std::cout<<"\nRecord Not Found\n";
-				return n;
-		    }
-	    };
-		int Update(User *p, int id_n,int n){
-			int i,ch1;
-			for(i=0;i<n;i++){
-			if(p[i].USER_id==id_n);
-			while(1){
-    			std::cout<<"\nOPTIONS IN UPDATE\n";
-    			std::cout<<"\n 1. Update NAME";
-    			std::cout<<"\n 2. Update ROLE";
-   				std::cout<<"\n\n Enter Your Choice:";
-   				std::cin>>ch1;    				
-				switch(ch1){
-    				case 1: std::cout<<"NAME:";
-    						std::cin>>p[i].username;
-    						std::cout<<"Record Updated...\n";
-    						break;
-   					case 2: std::cout<<"ROLE:\t";
-   							std::cin>>p[i].user_role;
-   							std::cout<<"Record Updated...\n";
-   							break; 
-				}
-			break;
-			}
-			if(p[i].USER_id==id_n){
-    			std::cout<<"\nRecord Not Found\n\n";
-			}
-		}
-}
-		void Display(){
-			std::cout<<USER_id<<"\t"<<username<<"\t"<<password<<"\t"<<user_role<<"\n";
-		}
-};
-
-class User_role{
-    public:
-        int USER_role;
-        std::string role_name;
-};
-
-/*
-class DatabaseManager  {
-    public:
-        int create(User *p,int n){
-	        std::cout<<"Enter Name: ";
-	        std::cin >> p[n].username;
-            std::cout<<"Enter Password: ";
-	        std::cin >> p[n].password;
-	        p[n].USER_id=1+n+1;
-
-        	std::cout<<"\nRECORD INSERTED...\n";
-	        n++;
-	return n;
-	}
-};
-*/
-int main(){
-std::cout <<"hello world"<<"\n"<<"welcome to hot_coffe! \n";
-
-int i=1;
-User u_f[10];
-/*
-u_f[0].USER_id=1;
-u_f[0].username="ADMIN";
-u_f[0].password="15378900";
-u_f[0].user_role=1;
-*/
-u_f[i].create_BTS(u_f);
-
-//u_f.create();
-u_f[0].Display();
-/*
-User user_n;
-user_n.USER_id=1;
-user_n.username="ADMIN";
-user_n.password="15378900";
-user_n.user_role=1;
-
-*/
-
-
+        }
 return 0;
 }

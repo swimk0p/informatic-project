@@ -1,0 +1,5 @@
+INSERT INTO USER_ROLE VALUES (1, 'Официант'), (2, 'Повар'), (3, 'Управляющий');
+INSERT INTO order_status VALUES (1, 'Новый'), (2, 'Готовится'), (3, 'Готов');
+INSERT INTO "order" VALUES (1, 'Эспрессо', 150.0), (2, 'Капучино', 200.0), (3, 'Круассан', 120.0);
+-- Администратор по умолчанию
+INSERT INTO USER_data VALUES (1, 'admin', 9263, 3); 
